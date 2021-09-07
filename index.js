@@ -39,8 +39,6 @@ async function main() {
 
     while (true) {
         try {
-            console.log('Fetching price data...');
-
             const data = await fetch(url);
             const json = await data.json();
             
@@ -89,10 +87,10 @@ async function main() {
                     previousResults = sorted;
 
                     if (removed.length > 0) {
-                        console.log(colors.red(`${revmoed.length} listings removed`));
+                        console.log(colors.red(`${removed.length} listings removed`));
                     }
 
-                    for (const sol of existing) {
+                    for (const sol of removed) {
                         console.log(formatSol(sol));
                     }
 
