@@ -5,6 +5,7 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "node-fetch": "^3.0.0"
   }
 }

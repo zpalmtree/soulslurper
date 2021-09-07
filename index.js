@@ -1,5 +1,6 @@
 import * as fs from 'fs/promises';
 import fetch from 'node-fetch';
+import colors from 'colors';
 
 const RARITY_MIN = 100;
 const RANK_MIN = 1000;
@@ -26,9 +27,15 @@ async function createRarityMap() {
     return rarity;
 }
 
+function formatSol(sol) {
+    return `RANK: ${colors.green(String(sol.rank).padStart(4, ' '))} PRICE: ${colors.green((sol.price / decimals).toFixed(2) + ' SOL')} URL: ${colors.green(sol.url)}`;
+}
+
 async function main() {
     const url = `https://us-central1-digitaleyes-prod.cloudfunctions.net/offers-retriever-datastore?collection=Solana%20Souls`;
     const rarity = await createRarityMap();
+
+    let previousResults = [];
 
     while (true) {
         try {
@@ -60,8 +67,42 @@ async function main() {
             if (results.length > 0) {
                 const sorted = results.sort((a, b) => b.rank - a.rank);
 
-                for (const sol of sorted) {
-                    console.log(`RANK: ${String(sol.rank).padStart(4, '0')}  PRICE: ${(sol.price / decimals).toFixed(2)} SOL     NAME: ${sol.name}    URL: ${sol.url}`);
+                const added = [];
+                const removed = [];
+                const existing = [];
+
+                if (JSON.stringify(sorted) != JSON.stringify(previousResults)) {
+                    for (const sol of sorted) {
+                        if (previousResults.find((x) => x.name === sol.name) === undefined) {
+                            added.push(sol);
+                        } else {
+                            existing.push(sol);
+                        }
+                    }
+
+                    for (const sol of previousResults) {
+                        if (sorted.find((x) => x.name === sol.name) === undefined) {
+                            removed.push(sol);
+                        }
+                    }
+
+                    previousResults = sorted;
+
+                    if (removed.length > 0) {
+                        console.log(colors.red(`${added.length} listings removed`));
+                    }
+
+                    for (const sol of existing) {
+                        console.log(formatSol(sol));
+                    }
+
+                    if (added.length > 0) {
+                        console.log(colors.green(`${added.length} listings added`));
+                    }
+
+                    for (const sol of added) {
+                        console.log(formatSol(sol));
+                    }
                 }
             }
         } catch (err) {
