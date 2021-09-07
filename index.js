@@ -27,8 +27,12 @@ async function createRarityMap() {
     return rarity;
 }
 
-function formatSol(sol) {
-    return `RANK: ${colors.green(String(sol.rank).padStart(4, ' '))} PRICE: ${colors.green((sol.price / decimals).toFixed(2) + ' SOL')} URL: ${colors.green(sol.url)}`;
+function formatSol(sol, color) {
+    const rank = `RANK: ${String(sol.rank).padStart(4, ' ')[color]}`;
+    const price = `PRICE: ${((sol.price / decimals).toFixed(2) + ' SOL').padStart(9, ' ')[color]}`;
+    const url = `URL: ${sol.url[color]}`;
+
+    return `${rank}  ${price}  ${url}`;
 }
 
 async function main() {
@@ -91,7 +95,7 @@ async function main() {
                     }
 
                     for (const sol of removed) {
-                        console.log(formatSol(sol));
+                        console.log(formatSol(sol, 'red'));
                     }
 
                     if (added.length > 0) {
@@ -99,7 +103,7 @@ async function main() {
                     }
 
                     for (const sol of added) {
-                        console.log(formatSol(sol));
+                        console.log(formatSol(sol, 'green'));
                     }
                 }
             }
