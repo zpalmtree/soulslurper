@@ -6,7 +6,7 @@ const RARITY_MIN = 100;
 const RANK_MIN = 1000;
 const decimals = 1000000000;
 const PRICE_MAX = 10 * decimals;
-const rarityLocation = './soul_top2500.json';
+const rarityLocation = './soul_full.json';
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
