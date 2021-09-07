@@ -89,7 +89,7 @@ async function main() {
                     previousResults = sorted;
 
                     if (removed.length > 0) {
-                        console.log(colors.red(`${added.length} listings removed`));
+                        console.log(colors.red(`${revmoed.length} listings removed`));
                     }
 
                     for (const sol of existing) {
