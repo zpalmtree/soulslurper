@@ -1,9 +1,10 @@
 import * as fs from 'fs/promises';
 import fetch from 'node-fetch';
 
-const rarityMin = 100;
+const RARITY_MIN = 100;
+const RANK_MIN = 1000;
 const decimals = 1000000000;
-const priceMax = 5 * decimals;
+const PRICE_MAX = 10 * decimals;
 const rarityLocation = './soul_top2500.json';
 
 async function sleep(ms) {
@@ -45,7 +46,7 @@ async function main() {
                     continue;
                 }
 
-                if (offer.price < priceMax && r.rarity > rarityMin) {
+                if (offer.price < PRICE_MAX && r.rarity > RARITY_MIN && r.rank < RANK_MIN) {
                     results.push({
                         name: offer.metadata.name,
                         url: `https://digitaleyes.market/item/${offer.mint}`,
