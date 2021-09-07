@@ -2,11 +2,21 @@ import * as fs from 'fs/promises';
 import fetch from 'node-fetch';
 import colors from 'colors';
 
-const RARITY_MIN = 100;
-const RANK_MIN = 1000;
 const decimals = 1000000000;
-const PRICE_MAX = 10 * decimals;
 const rarityLocation = './soul_full.json';
+
+/* Only display souls with a rarity higher than this */
+const RARITY_MIN = 0;
+
+/* Only display souls below this ranking. https://solsoulsnft.com/rankings */
+const RANK_MIN = 1000;
+
+/* Only display souls costing less than this. */
+const PRICE_MAX = 10 * decimals;
+
+/* Field to sort the result data on. */
+/* Valid fields: 'rank', 'rarity', 'price', 'name', 'url' */
+const SORT_BY = 'price';
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -67,7 +77,7 @@ async function main() {
             }
 
             if (results.length > 0) {
-                const sorted = results.sort((a, b) => b.rank - a.rank);
+                const sorted = results.sort((a, b) => b[SORT_BY] - a[SORT_BY]);
 
                 const added = [];
                 const removed = [];
