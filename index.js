@@ -18,6 +18,28 @@ const PRICE_MAX = 10 * decimals;
 /* Valid fields: 'rank', 'rarity', 'price', 'name', 'url' */
 const SORT_BY = 'price';
 
+/* This setting toggles whether attribute filters are combinational or additional.
+ * For example, consider you have all fields enabled. Then, you disable all 
+ * bodies except for rainbow, and all glasses but synth glasses.
+* If TRAIT_FILTERS_COMBINE is set to false, the results would contain any
+* results, where the soul either has a rainbow body, or synth glasses.
+* However, if TRAIT_FILTERS_COMBINE is set to true, the results would contain
+* any souls where the body is rainbow, and the glasses are synth. In other words,
+* the filters have been combined.
+* A true value requires every attribute the soul has to be set to enabled in the filter,
+* whereas a false value requires at least one attribute the soul has to be
+* enabled in the filter.
+*
+* To make the filters work best, you probably want to set everything to false
+* when TRAIT_FILTERS_COMBINE is set to false, then enable just the traits you
+* are interested in. E.g., set anything rainbow to true, to find only souls
+* with rainbow items.
+*
+* When TRAIT_FILTERS_COMBINE is set to true, you probably want everything enabled,
+* except the attributes you are not interested in. E.g. leave everything enabled,
+* then disable all bodies but rainbow to find only rainbow bodied souls. */
+const TRAIT_FILTERS_COMBINE = false;
+
 /* Filter out any attributes. Just set enabled to false to exclude them from
  * results. */
 const ATTRIBUTE_FILTER = {
@@ -537,22 +559,27 @@ async function main() {
                 }
 
                 if (offer.price < PRICE_MAX && r.rarity > RARITY_MIN && r.rank < RANK_MIN) {
-                    let included = true;
+                    let haveIncludedTrait = false;
+                    let haveAllIncludedTraits = true;
 
                     for (const attribute of offer.metadata.attributes) {
                         const field = attributeFieldMapping.get(attribute.trait_type);
 
                         if (field) {
                             const filter = ATTRIBUTE_FILTER[field].find((x) => x.name === attribute.value);
-                            included = filter?.enabled || false;
-                        }
+                            const traitEnabled = filter?.enabled || false;
 
-                        if (!included) {
-                            break;
+                            /* We have one of the traits required, if this trait
+                             * is enabled, or we already found a required trait. */
+                            haveIncludedTrait = traitEnabled || haveIncludedTrait;
+
+                            /* We have all traits required, if this trait is
+                             * enabled, and all other traits are enabled */
+                            haveAllIncludedTraits = haveAllIncludedTraits && traitEnabled;
                         }
                     }
 
-                    if (included) {
+                    if ((TRAIT_FILTERS_COMBINE && haveAllIncludedTraits) || (!TRAIT_FILTERS_COMBINE && haveIncludedTrait)) {
                         results.push({
                             name: offer.metadata.name,
                             url: `https://digitaleyes.market/item/${offer.mint}`,
