@@ -12,7 +12,7 @@ const RARITY_MIN = 0;
 const RANK_MIN = 1000;
 
 /* Only display souls costing less than this. */
-const PRICE_MAX = 10 * decimals;
+const PRICE_MAX = 30 * decimals;
 
 /* Field to sort the result data on. */
 /* Valid fields: 'rank', 'rarity', 'price', 'name', 'url' */
@@ -40,29 +40,37 @@ const SORT_BY = 'price';
 * then disable all bodies but rainbow to find only rainbow bodied souls. */
 const TRAIT_FILTERS_COMBINE = false;
 
+/* Quickly disable attribute filtering without having to wipe your custom filters.
+ * Setting to true will disable any effects of the ATTRIBUTE_FILTER item,
+ * all attributes will be included in the results. */
+const DISABLE_ATTRIBUTE_FILTER = true;
+
+/* Print debug info */
+const DEBUG = false;
+
 /* Filter out any attributes. Just set enabled to false to exclude them from
  * results. */
 const ATTRIBUTE_FILTER = {
     bodies: [
         {
             name: 'Base White', /* 54.93% */
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Base Green', /* 25.48% */
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Base Blue', /* 9.78% */
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Base Purple', /* 6.03% */
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Base Orange', /* 2.96% */
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Base Rainbow', /* 0.82% */
@@ -72,39 +80,39 @@ const ATTRIBUTE_FILTER = {
     backgrounds: [
         {
             name: 'Cauldron',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Fence',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Lantern',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Tombstone Bat',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Cross',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Full Moon',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Half Moon',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Sun Sky',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Underworld',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Synth Sun',
@@ -118,43 +126,43 @@ const ATTRIBUTE_FILTER = {
     mouths: [
         {
             name: 'Smile',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Flat',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Frown',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Circle',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Lipstick',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Kissing',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Stache',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pucker',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Shy Guy',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Tongue',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Booo',
@@ -172,123 +180,123 @@ const ATTRIBUTE_FILTER = {
     hairs: [
         {
             name: 'None',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Straw Hat',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Ninja Black',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Heart Band',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pomp',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Clown',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Cat Ears Brown',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Baseball Hat Red',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Baseball Hat Sol',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Black Beanie',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Wizard',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Ninja Red',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Emo',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Baseball Hat Blue',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pol',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Baseball Hat Green',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Cowboy',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Baseball Hat Heart',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Bit Phones',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Cat Ears Synth',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Queen',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Frog',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Santa Beanie',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Synth Horn',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Crown',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Chef Hat',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Blue Arrow',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Miner',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Ora',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pirate',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Rain-Bow',
@@ -314,51 +322,51 @@ const ATTRIBUTE_FILTER = {
     hands: [
         {
             name: 'None',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Ice Cream Cone Strawberry',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Broom',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Spatula',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Wand',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Knife',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pickaxe Gold',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Ice Cream Cone Mint',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pirate Hook',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Green Saber',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Blue Saber',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Pickaxe Diamond',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Staff',
@@ -370,15 +378,15 @@ const ATTRIBUTE_FILTER = {
         },
         {
             name: 'Diamond Hands',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Red Saber',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Boxing Gloves',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Sword Diamond',
@@ -400,39 +408,39 @@ const ATTRIBUTE_FILTER = {
     glasses: [
         {
             name: 'None',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Hipster Blue',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Hipster Red',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Deal With It',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Round Glasses',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Shades',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Eye Patch',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Sans',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Monacle',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Star Glasses',
@@ -446,57 +454,57 @@ const ATTRIBUTE_FILTER = {
     eyes: [
         {
             name: 'Black Right Wink',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Black',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Black Left Wink',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Happy',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Black Wide',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Blue Eyeshadow',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Red',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Purple Eyeshadow',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Sleep',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Red Dot',
-            enabled: true,
+            enabled: false,
         },
     ],
     cheeks: [
         {
             name: 'Pink',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Red',
-            enabled: true,
+            enabled: false,
         },
         {
             name: 'Crying',
-            enabled: true,
+            enabled: false,
         },
     ],
 };
@@ -539,7 +547,7 @@ function formatSol(sol, color) {
 }
 
 async function main() {
-    const url = `https://us-central1-digitaleyes-prod.cloudfunctions.net/offers-retriever-datastore?collection=Solana%20Souls`;
+    const url = `https://us-central1-digitaleyes-prod.cloudfunctions.net/offers-retriever?collection=Solana%20Souls`;
     const rarity = await createRarityMap();
 
     let previousResults = [];
@@ -548,16 +556,14 @@ async function main() {
         try {
             const data = await fetch(url);
             const json = await data.json();
+
+            if (DEBUG) {
+                console.log('got data: ' + JSON.stringify(json, null, 4));
+            }
             
             const results = [];
 
-            let priceFloor = 10000 * decimals;
-
             for (const offer of json.offers) {
-                if (offer.price < priceFloor) {
-                    priceFloor = offer.price;
-                }
-
                 const r = rarity.get(offer.metadata.name);
 
                 if (!r) {
@@ -565,6 +571,18 @@ async function main() {
                 }
 
                 if (offer.price < PRICE_MAX && r.rarity > RARITY_MIN && r.rank < RANK_MIN) {
+                    if (DISABLE_ATTRIBUTE_FILTER) {
+                        results.push({
+                            name: offer.metadata.name,
+                            url: `https://digitaleyes.market/item/${offer.mint}`,
+                            rank: r.rank,
+                            rarity: r.rarity,
+                            price: offer.price,
+                        });
+
+                        continue;
+                    }
+
                     let haveIncludedTrait = false;
                     let haveAllIncludedTraits = true;
 
@@ -620,7 +638,7 @@ async function main() {
 
                     const time = new Date().toLocaleTimeString();
 
-                    let status = `\n${colors.white('PRICE FLOOR')}: ` + colors.green((priceFloor / decimals).toFixed(2) + ' SOL, ');
+                    let status = `\n${colors.white('PRICE FLOOR')}: ` + colors.green((json.price_floor / decimals).toFixed(2) + ' SOL, ');
 
                     status += `${colors.white('TOTAL LISTINGS')}: ${colors.green(json.offers.length)}, ${colors.white('TIME')}: ${colors.green(time)}`;
 
