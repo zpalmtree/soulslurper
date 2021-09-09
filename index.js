@@ -790,7 +790,9 @@ async function cursorRefresh() {
 
     const tmpCursors = await fetchCursors();
 
-    console.log(`Got ${tmpCursors.length} new cursors`);
+    if (DEBUG) {
+        console.log(`Got ${tmpCursors.length} new cursors`);
+    }
 
     if (tmpCursors.length > 0) {
         cursors = tmpCursors;
