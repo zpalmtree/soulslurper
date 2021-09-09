@@ -696,25 +696,42 @@ async function fetchCursors() {
 
     let json;
 
-    const results = [];
+    const results = [''];
 
     while (true) {
-        const data = await fetch(url + `&cursor=${cursor}`);
-        json = await data.json();
+        const controller = new AbortController();
 
-        if (!json.offers) {
-            break;
-        }
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, 10 * 10000);
 
-        if (json.next_cursor) {
-            cursor = json.next_cursor;
-            results.push(cursor);
-        } else {
-            break;
-        }
+        try {
+            const data = await fetch(url + `&cursor=${cursor}`);
 
-        if (DEBUG) {
-            console.log((json.offers[0].price / decimals).toFixed(2) + ' SOL');
+            json = await data.json();
+
+            if (!json.offers) {
+                break;
+            }
+
+            if (json.offers[0].price > PRICE_MAX) {
+                break;
+            }
+
+            if (json.next_cursor) {
+                cursor = json.next_cursor;
+                results.push(cursor);
+            } else {
+                break;
+            }
+
+            if (DEBUG) {
+                console.log(`Cursor progress: ${(json.offers[0].price / decimals).toFixed(2)} SOL`);
+            }
+        } catch (err) {
+            console.log('Error downloading cursor: ' + err.toString());
+        } finally {
+            clearTimeout(timeout);
         }
     }
 
@@ -767,7 +784,7 @@ async function fetchCatalogue() {
         }
 
         if (DEBUG) {
-            console.log((data.offers[0].price / decimals).toFixed(2) + ' SOL');
+            console.log(`Catalogue progress: ${(data.offers[0].price / decimals).toFixed(2)} SOL`);
         }
 
         results = results.concat(data.offers);
@@ -795,6 +812,14 @@ async function cursorRefresh() {
     }
 
     if (tmpCursors.length > 0) {
+        if (DEBUG) {
+            if (JSON.stringify(cursors) != JSON.stringify(tmpCursors)) {
+                console.log('New cursors found');
+            } else {
+                console.log('Cursors have not changed');
+            }
+        }
+
         cursors = tmpCursors;
     }
 
@@ -810,12 +835,16 @@ async function main() {
 
     while (true) {
         try {
+            if (DEBUG) {
+                console.log('getting catalogue json');
+            }
+
             const json = await fetchCatalogue();
 
             if (DEBUG) {
-                console.log('got data: ' + JSON.stringify(json, null, 4));
+                console.log('got catalogue json');
             }
-            
+
             const results = [];
 
             for (const offer of json.offers) {
@@ -870,6 +899,10 @@ async function main() {
                 }
             }
 
+            if (DEBUG) {
+                console.log('Filtered results: ' + results.length);
+            }
+
             if (results.length > 0) {
                 const sorted = results.sort((a, b) => b[SORT_BY] - a[SORT_BY]);
 
@@ -895,7 +928,7 @@ async function main() {
 
                     let status = `\n${colors.white('PRICE FLOOR')}: ` + colors.green((json.price_floor / decimals).toFixed(2) + ' SOL, ');
 
-                    status += `${colors.white('TOTAL LISTINGS')}: ${colors.green(json.offers.length)}, ${colors.white('TIME')}: ${colors.green(time)}`;
+                    status += `${colors.white('TIME')}: ${colors.green(time)}`;
 
                     if (removed.length > 0) {
                         status += `\n${colors.white('LISTINGS SOLD/DELISTED')}: ${colors.red(removed.length)}`;
