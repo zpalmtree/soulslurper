@@ -9,10 +9,10 @@ const rarityLocation = './soul_full.json';
 const RARITY_MIN = 0;
 
 /* Only display souls below this ranking. https://solsoulsnft.com/rankings */
-const RANK_MIN = 1000;
+const RANK_MIN = 10000;
 
 /* Only display souls costing less than this. */
-const PRICE_MAX = 30 * decimals;
+const PRICE_MAX = 10 * decimals;
 
 /* Field to sort the result data on. */
 /* Valid fields: 'rank', 'rarity', 'price', 'name', 'url' */
@@ -546,16 +546,58 @@ function formatSol(sol, color) {
     return `${rank}  ${price}  ${url}`;
 }
 
+const url = `https://us-central1-digitaleyes-prod.cloudfunctions.net/offers-retriever?collection=Solana%20Souls&price=asc`;
+
+async function fetchCatalogue() {
+    const results = [];
+
+    let cursor = '';
+
+    let json;
+
+    while (true) {
+        const data = await fetch(url + `&cursor=${cursor}`);
+        json = await data.json();
+
+        if (DEBUG) {
+            console.log(json.offers);
+        }
+
+        if (!json.offers) {
+            break;
+        }
+
+        if (json.offers[0].price > PRICE_MAX) {
+            break;
+        }
+
+        results.concat(json.offers);
+
+        if (json.next_cursor) {
+            cursor = json.next_cursor;
+        } else {
+            break;
+        }
+
+        if (DEBUG) {
+            console.log(cursor);
+        }
+    }
+
+    return {
+        offers: results,
+        price_floor: json.price_floor,
+    };
+}
+
 async function main() {
-    const url = `https://us-central1-digitaleyes-prod.cloudfunctions.net/offers-retriever?collection=Solana%20Souls`;
     const rarity = await createRarityMap();
 
     let previousResults = [];
 
     while (true) {
         try {
-            const data = await fetch(url);
-            const json = await data.json();
+            const json = await fetchCatalogue();
 
             if (DEBUG) {
                 console.log('got data: ' + JSON.stringify(json, null, 4));
