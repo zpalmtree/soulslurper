@@ -479,6 +479,16 @@ const ATTRIBUTE_FILTER = {
     ],
 };
 
+const attributeFieldMapping = new Map([
+    ['Background', 'backgrounds'],
+    ['Body', 'bodies'],
+    ['Eyes', 'eyes'],
+    ['Mouth', 'mouths'],
+    ['Glasses', 'glasses'],
+    ['Hands', 'hands'],
+    ['Hair/Hait', 'hairs']
+]);
+
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -528,43 +538,13 @@ async function main() {
 
                 if (offer.price < PRICE_MAX && r.rarity > RARITY_MIN && r.rank < RANK_MIN) {
                     let included = true;
+
                     for (const attribute of offer.metadata.attributes) {
-                        switch (attribute.trait_type) {
-                            case 'Background': {
-                                const filter = ATTRIBUTE_FILTER.backgrounds.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
-                            case 'Body': {
-                                const filter = ATTRIBUTE_FILTER.bodies.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
-                            case 'Eyes': {
-                                const filter = ATTRIBUTE_FILTER.eyes.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
-                            case 'Mouth': {
-                                const filter = ATTRIBUTE_FILTER.mouths.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
-                            case 'Glasses': {
-                                const filter = ATTRIBUTE_FILTER.glasses.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
-                            case 'Hands': {
-                                const filter = ATTRIBUTE_FILTER.hands.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
-                            case 'Hair/Hat': {
-                                const filter = ATTRIBUTE_FILTER.hairs.find((x) => x.name === attribute.value);
-                                included = filter?.enabled || false;
-                                break;
-                            }
+                        const field = attributeFieldMapping.get(attribute.trait_type);
+
+                        if (field) {
+                            const filter = ATTRIBUTE_FILTER[field].find((x) => x.name === attribute.value);
+                            included = filter?.enabled || false;
                         }
 
                         if (!included) {
@@ -589,14 +569,11 @@ async function main() {
 
                 const added = [];
                 const removed = [];
-                const existing = [];
 
                 if (JSON.stringify(sorted) != JSON.stringify(previousResults)) {
                     for (const sol of sorted) {
                         if (previousResults.find((x) => x.name === sol.name) === undefined) {
                             added.push(sol);
-                        } else {
-                            existing.push(sol);
                         }
                     }
 
@@ -609,7 +586,7 @@ async function main() {
                     previousResults = sorted;
 
                     if (removed.length > 0) {
-                        console.log(colors.red(`${removed.length} listings removed`));
+                        console.log(colors.red(`${removed.length} listings sold/delisted`));
                     }
 
                     for (const sol of removed) {
