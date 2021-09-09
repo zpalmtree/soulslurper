@@ -531,9 +531,9 @@ async function createRarityMap() {
 }
 
 function formatSol(sol, color) {
-    const rank = `RANK: ${String(sol.rank).padStart(4, ' ')[color]}`;
-    const price = `PRICE: ${((sol.price / decimals).toFixed(2) + ' SOL').padStart(9, ' ')[color]}`;
-    const url = `URL: ${sol.url[color]}`;
+    const rank = `${colors.white('RANK')}: ${String(sol.rank).padStart(4, ' ')[color]}`;
+    const price = `${colors.white('PRICE')}: ${((sol.price / decimals).toFixed(2) + ' SOL').padStart(9, ' ')[color]}`;
+    const url = `${colors.white('URL')}: ${sol.url[color]}`;
 
     return `${rank}  ${price}  ${url}`;
 }
@@ -551,7 +551,13 @@ async function main() {
             
             const results = [];
 
+            let priceFloor = 10000 * decimals;
+
             for (const offer of json.offers) {
+                if (offer.price < priceFloor) {
+                    priceFloor = offer.price;
+                }
+
                 const r = rarity.get(offer.metadata.name);
 
                 if (!r) {
@@ -612,16 +618,24 @@ async function main() {
 
                     previousResults = sorted;
 
-                    if (removed.length > 0) {
-                        console.log(colors.red(`${removed.length} listings sold/delisted`));
-                    }
+                    const time = new Date().toLocaleTimeString();
 
-                    for (const sol of removed) {
-                        console.log(formatSol(sol, 'red'));
+                    let status = `\n${colors.white('PRICE FLOOR')}: ` + colors.green((priceFloor / decimals).toFixed(2) + ' SOL, ');
+
+                    status += `${colors.white('TOTAL LISTINGS')}: ${colors.green(json.offers.length)}, ${colors.white('TIME')}: ${colors.green(time)}`;
+
+                    if (removed.length > 0) {
+                        status += `\n${colors.white('LISTINGS SOLD/DELISTED')}: ${colors.red(removed.length)}`;
                     }
 
                     if (added.length > 0) {
-                        console.log(colors.green(`${added.length} listings added`));
+                        status += `\n${colors.white('LISTINGS ADDED')}: ${colors.green(added.length)}`;
+                    }
+
+                    console.log(status);
+
+                    for (const sol of removed) {
+                        console.log(formatSol(sol, 'red'));
                     }
 
                     for (const sol of added) {
