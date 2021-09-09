@@ -10,7 +10,7 @@ const rarityLocation = './soul_full.json';
 const RARITY_MIN = 0;
 
 /* Only display souls below this ranking. https://solsoulsnft.com/rankings */
-const RANK_MIN = 1000;
+const RANK_MIN = 10000;
 
 /* Only display souls costing less than this. */
 const PRICE_MAX = 10 * decimals;
@@ -549,7 +549,7 @@ function formatSol(sol, color) {
 
 const url = `https://us-central1-digitaleyes-prod.cloudfunctions.net/offers-retriever?collection=Solana%20Souls&price=asc`;
 
-const cursors = [
+let cursors = [
     '',
     "CmQKDwoFcHJpY2USBgiAqNa5BxJNahJzfmRpZ2l0YWxleWVzLXByb2RyNwsSBU9mZmVyIixBczcxTFhOVGdNRktGcnNSYm5lcXBHRFZORjdmUURDaXpYZ0pCZlFuM1VEcgwYACAA",
     "CmQKDwoFcHJpY2USBgiArIWZCBJNahJzfmRpZ2l0YWxleWVzLXByb2RyNwsSBU9mZmVyIixIUFhnS0xkYzM4VW5tTmJxVXhOanJWNnFiaTh3cTEzSGdkUEtraTFEdlpUawwYACAA",
@@ -718,10 +718,18 @@ async function fetchCursors() {
         }
     }
 
-    console.log(JSON.stringify(results, null, 4));
+    if (DEBUG) {
+        console.log(JSON.stringify(results, null, 4));
+    }
+
+    return results;
 }
 
 async function fetchCatalogue() {
+    if (DEBUG) {
+        console.log('Fetching catalogue');
+    }
+
     const promises = [];
 
     for (const cursor of cursors) {
@@ -736,7 +744,7 @@ async function fetchCatalogue() {
 
             promises.push(fetch(url + `&cursor=${cursor}`, { signal: controller.signal }).then((x) => x.json()));
         } catch (err) {
-            console.log(err.toString());
+            console.log('Error downloading catalogue: ' + err.toString());
         } finally {
             clearTimeout(timeout);
         }
@@ -765,17 +773,38 @@ async function fetchCatalogue() {
         results = results.concat(data.offers);
     }
 
+    if (DEBUG) {
+        console.log(`Finished fetching catalogue, collected ${results.length} offers`);
+    }
+
     return {
         offers: results,
         price_floor: floor,
     };
 }
 
+async function cursorRefresh() {
+    if (DEBUG) {
+        console.log('Fetching cursors');
+    }
+
+    const tmpCursors = await fetchCursors();
+
+    console.log(`Got ${tmpCursors.length} new cursors`);
+
+    if (tmpCursors.length > 0) {
+        cursors = tmpCursors;
+    }
+
+    await cursorRefresh();
+}
 
 async function main() {
     const rarity = await createRarityMap();
 
     let previousResults = [];
+
+    cursorRefresh();
 
     while (true) {
         try {
