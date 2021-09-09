@@ -18,6 +18,467 @@ const PRICE_MAX = 10 * decimals;
 /* Valid fields: 'rank', 'rarity', 'price', 'name', 'url' */
 const SORT_BY = 'price';
 
+/* Filter out any attributes. Just set enabled to false to exclude them from
+ * results. */
+const ATTRIBUTE_FILTER = {
+    bodies: [
+        {
+            name: 'Base White', /* 54.93% */
+            enabled: true,
+        },
+        {
+            name: 'Base Green', /* 25.48% */
+            enabled: true,
+        },
+        {
+            name: 'Base Blue', /* 9.78% */
+            enabled: true,
+        },
+        {
+            name: 'Base Purple', /* 6.03% */
+            enabled: true,
+        },
+        {
+            name: 'Base Orange', /* 2.96% */
+            enabled: true,
+        },
+        {
+            name: 'Base Rainbow', /* 0.82% */
+            enabled: true,
+        },
+    ],
+    backgrounds: [
+        {
+            name: 'Cauldron',
+            enabled: true,
+        },
+        {
+            name: 'Fence',
+            enabled: true,
+        },
+        {
+            name: 'Lantern',
+            enabled: true,
+        },
+        {
+            name: 'Tombstone Bat',
+            enabled: true,
+        },
+        {
+            name: 'Cross',
+            enabled: true,
+        },
+        {
+            name: 'Full Moon',
+            enabled: true,
+        },
+        {
+            name: 'Half Moon',
+            enabled: true,
+        },
+        {
+            name: 'Sun Sky',
+            enabled: true,
+        },
+        {
+            name: 'Underworld',
+            enabled: true,
+        },
+        {
+            name: 'Synth Sun',
+            enabled: true,
+        },
+        {
+            name: 'Rainbow',
+            enabled: true,
+        },
+    ],
+    mouths: [
+        {
+            name: 'Smile',
+            enabled: true,
+        },
+        {
+            name: 'Flat',
+            enabled: true,
+        },
+        {
+            name: 'Frown',
+            enabled: true,
+        },
+        {
+            name: 'Circle',
+            enabled: true,
+        },
+        {
+            name: 'Lipstick',
+            enabled: true,
+        },
+        {
+            name: 'Kissing',
+            enabled: true,
+        },
+        {
+            name: 'Stache',
+            enabled: true,
+        },
+        {
+            name: 'Pucker',
+            enabled: true,
+        },
+        {
+            name: 'Shy Guy',
+            enabled: true,
+        },
+        {
+            name: 'Tongue',
+            enabled: true,
+        },
+        {
+            name: 'Booo',
+            enabled: true,
+        },
+        {
+            name: 'Rainbow Vom',
+            enabled: true,
+        },
+        {
+            name: 'Vamp Fangs',
+            enabled: true,
+        },
+    ],
+    hairs: [
+        {
+            name: 'None',
+            enabled: true,
+        },
+        {
+            name: 'Straw Hat',
+            enabled: true,
+        },
+        {
+            name: 'Ninja Black',
+            enabled: true,
+        },
+        {
+            name: 'Heart Band',
+            enabled: true,
+        },
+        {
+            name: 'Pomp',
+            enabled: true,
+        },
+        {
+            name: 'Clown',
+            enabled: true,
+        },
+        {
+            name: 'Cat Ears Brown',
+            enabled: true,
+        },
+        {
+            name: 'Baseball Hat Red',
+            enabled: true,
+        },
+        {
+            name: 'Baseball Hat Sol',
+            enabled: true,
+        },
+        {
+            name: 'Black Beanie',
+            enabled: true,
+        },
+        {
+            name: 'Wizard',
+            enabled: true,
+        },
+        {
+            name: 'Ninja Red',
+            enabled: true,
+        },
+        {
+            name: 'Emo',
+            enabled: true,
+        },
+        {
+            name: 'Baseball Hat Blue',
+            enabled: true,
+        },
+        {
+            name: 'Pol',
+            enabled: true,
+        },
+        {
+            name: 'Baseball Hat Green',
+            enabled: true,
+        },
+        {
+            name: 'Cowboy',
+            enabled: true,
+        },
+        {
+            name: 'Baseball Hat Heart',
+            enabled: true,
+        },
+        {
+            name: 'Bit Phones',
+            enabled: true,
+        },
+        {
+            name: 'Cat Ears Synth',
+            enabled: true,
+        },
+        {
+            name: 'Queen',
+            enabled: true,
+        },
+        {
+            name: 'Frog',
+            enabled: true,
+        },
+        {
+            name: 'Santa Beanie',
+            enabled: true,
+        },
+        {
+            name: 'Synth Horn',
+            enabled: true,
+        },
+        {
+            name: 'Crown',
+            enabled: true,
+        },
+        {
+            name: 'Chef Hat',
+            enabled: true,
+        },
+        {
+            name: 'Blue Arrow',
+            enabled: true,
+        },
+        {
+            name: 'Miner',
+            enabled: true,
+        },
+        {
+            name: 'Ora',
+            enabled: true,
+        },
+        {
+            name: 'Pirate',
+            enabled: true,
+        },
+        {
+            name: 'Rain-Bow',
+            enabled: true,
+        },
+        {
+            name: 'Halo',
+            enabled: true,
+        },
+        {
+            name: 'Horns',
+            enabled: true,
+        },
+        {
+            name: 'Ghost King',
+            enabled: true,
+        },
+        {
+            name: 'Rainbow Hawk',
+            enabled: true,
+        },
+    ],
+    hands: [
+        {
+            name: 'None',
+            enabled: true,
+        },
+        {
+            name: 'Ice Cream Cone Strawberry',
+            enabled: true,
+        },
+        {
+            name: 'Broom',
+            enabled: true,
+        },
+        {
+            name: 'Spatula',
+            enabled: true,
+        },
+        {
+            name: 'Wand',
+            enabled: true,
+        },
+        {
+            name: 'Knife',
+            enabled: true,
+        },
+        {
+            name: 'Pickaxe Gold',
+            enabled: true,
+        },
+        {
+            name: 'Ice Cream Cone Mint',
+            enabled: true,
+        },
+        {
+            name: 'Pirate Hook',
+            enabled: true,
+        },
+        {
+            name: 'Green Saber',
+            enabled: true,
+        },
+        {
+            name: 'Blue Saber',
+            enabled: true,
+        },
+        {
+            name: 'Pickaxe Diamond',
+            enabled: true,
+        },
+        {
+            name: 'Staff',
+            enabled: true,
+        },
+        {
+            name: 'Sword Gold',
+            enabled: true,
+        },
+        {
+            name: 'Diamond Hands',
+            enabled: true,
+        },
+        {
+            name: 'Red Saber',
+            enabled: true,
+        },
+        {
+            name: 'Boxing Gloves',
+            enabled: true,
+        },
+        {
+            name: 'Sword Diamond',
+            enabled: true,
+        },
+        {
+            name: 'Pitch Fork',
+            enabled: true,
+        },
+        {
+            name: 'Harp',
+            enabled: true,
+        },
+        {
+            name: 'Royal Scepter',
+            enabled: true,
+        },
+    ],
+    glasses: [
+        {
+            name: 'None',
+            enabled: true,
+        },
+        {
+            name: 'Hipster Blue',
+            enabled: true,
+        },
+        {
+            name: 'Hipster Red',
+            enabled: true,
+        },
+        {
+            name: 'Deal With It',
+            enabled: true,
+        },
+        {
+            name: 'Round Glasses',
+            enabled: true,
+        },
+        {
+            name: 'Shades',
+            enabled: true,
+        },
+        {
+            name: 'Eye Patch',
+            enabled: true,
+        },
+        {
+            name: 'Sans',
+            enabled: true,
+        },
+        {
+            name: 'Monacle',
+            enabled: true,
+        },
+        {
+            name: 'Star Glasses',
+            enabled: true,
+        },
+        {
+            name: 'Synth Glasses',
+            enabled: true,
+        },
+    ],
+    eyes: [
+        {
+            name: 'Black Right Wink',
+            enabled: true,
+        },
+        {
+            name: 'Black',
+            enabled: true,
+        },
+        {
+            name: 'Black Left Wink',
+            enabled: true,
+        },
+        {
+            name: 'Happy',
+            enabled: true,
+        },
+        {
+            name: 'Black Wide',
+            enabled: true,
+        },
+        {
+            name: 'Blue Eyeshadow',
+            enabled: true,
+        },
+        {
+            name: 'Red',
+            enabled: true,
+        },
+        {
+            name: 'Purple Eyeshadow',
+            enabled: true,
+        },
+        {
+            name: 'Sleep',
+            enabled: true,
+        },
+        {
+            name: 'Red Dot',
+            enabled: true,
+        },
+    ],
+    cheeks: [
+        {
+            name: 'Pink',
+            enabled: true,
+        },
+        {
+            name: 'Red',
+            enabled: true,
+        },
+        {
+            name: 'Crying',
+            enabled: true,
+        },
+    ],
+};
+
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -66,13 +527,60 @@ async function main() {
                 }
 
                 if (offer.price < PRICE_MAX && r.rarity > RARITY_MIN && r.rank < RANK_MIN) {
-                    results.push({
-                        name: offer.metadata.name,
-                        url: `https://digitaleyes.market/item/${offer.mint}`,
-                        rank: r.rank,
-                        rarity: r.rarity,
-                        price: offer.price,
-                    });
+                    let included = true;
+                    for (const attribute of offer.metadata.attributes) {
+                        switch (attribute.trait_type) {
+                            case 'Background': {
+                                const filter = ATTRIBUTE_FILTER.backgrounds.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                            case 'Body': {
+                                const filter = ATTRIBUTE_FILTER.bodies.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                            case 'Eyes': {
+                                const filter = ATTRIBUTE_FILTER.eyes.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                            case 'Mouth': {
+                                const filter = ATTRIBUTE_FILTER.mouths.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                            case 'Glasses': {
+                                const filter = ATTRIBUTE_FILTER.glasses.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                            case 'Hands': {
+                                const filter = ATTRIBUTE_FILTER.hands.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                            case 'Hair/Hat': {
+                                const filter = ATTRIBUTE_FILTER.hairs.find((x) => x.name === attribute.value);
+                                included = filter?.enabled || false;
+                                break;
+                            }
+                        }
+
+                        if (!included) {
+                            break;
+                        }
+                    }
+
+                    if (included) {
+                        results.push({
+                            name: offer.metadata.name,
+                            url: `https://digitaleyes.market/item/${offer.mint}`,
+                            rank: r.rank,
+                            rarity: r.rarity,
+                            price: offer.price,
+                        });
+                    }
                 }
             }
 
